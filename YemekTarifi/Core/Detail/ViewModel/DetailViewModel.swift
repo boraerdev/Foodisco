@@ -6,16 +6,21 @@
 //
 
 import Foundation
+import Firebase
 
 class DetailViewModel: ObservableObject {
     
     @Published var user: User?
     @Published var favlist: [Post] = []
+    @Published var post: Post
+    @Published var comments: [Comment] = []
     
-    init(userUid: String){
+    init(post: Post, userUid: String){
+        self.post = post
         DispatchQueue.main.async {
             self.updateFavList()
             self.getUser(uid: userUid)
+            self.getComments()
         }
     }
     
@@ -43,6 +48,28 @@ class DetailViewModel: ObservableObject {
             PostServices.shared.getFavList { [weak self] post in
                     self?.favlist = post
             }
+    }
+    
+    
+    func addComment(post: Post, comment: String){
+        let data = ["comment": comment, "authorUid": Auth.auth().currentUser?.uid] as [String: Any]
+        Firestore.firestore().collection("posts").document(post.id ?? "").collection("comments").document(UUID().uuidString)
+            .setData(data) { error in
+                
+            }
+    }
+    
+    func getComments(){
+        Firestore.firestore().collection("posts").document(post.id ?? "").collection("comments").addSnapshotListener { querySnapshot, error in
+            guard let docs = querySnapshot?.documents else {return}
+            var commentsin : [Comment] = []
+            for doc in docs {
+                guard let comment = try? doc.data(as: Comment.self) else {return}
+                commentsin.append(comment)
+            }
+            self.comments = commentsin
+            //self.comments.sort(by: {$0.timestamp > $1.timestamp})
+        }
     }
     
     

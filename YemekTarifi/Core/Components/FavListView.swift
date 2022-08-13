@@ -11,11 +11,9 @@ import Firebase
 struct FavListView: View {
     @StateObject var vm : FavListViewModel
     @Environment (\.presentationMode) var presentationMode
-    @StateObject var detailVm : DetailViewModel
     init(){
         
         _vm = StateObject(wrappedValue: FavListViewModel())
-        _detailVm = StateObject(wrappedValue: DetailViewModel(userUid: Auth.auth().currentUser?.uid ?? ""))
     }
     
     var body: some View {

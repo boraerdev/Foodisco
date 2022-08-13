@@ -39,6 +39,7 @@ class AuthViewModel: ObservableObject {
                 self.showError.toggle()
                 return
             }
+            self.fetchUser()
             guard let user = result?.user else {return}
             self.userSession = user
             Firestore.firestore().collection("users").document((self.userSession?.uid)!).setData(data) { error in
@@ -54,6 +55,7 @@ class AuthViewModel: ObservableObject {
                 self.showError.toggle()
                 return
             }
+            self.fetchUser()
             guard let resultFinish = result else {
                 return
             }

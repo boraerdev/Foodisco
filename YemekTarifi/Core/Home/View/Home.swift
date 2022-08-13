@@ -9,7 +9,6 @@ import SwiftUI
 import Kingfisher
 
 struct Home: View {
-    @State var searched: String = ""
     @EnvironmentObject var vm: HomeViewModel
     @EnvironmentObject var authVm : AuthViewModel
     @Environment (\.colorScheme) var colorScheme
@@ -25,11 +24,15 @@ struct Home: View {
                     .padding()
                     Divider()
                     ScrollView {
-                        VStack{
-                            onerilenlerHeader
-                            mutfaklarHeader
-                            tariflerHeader
-                            .padding()
+                        if vm.searched == "" {
+                            VStack{
+                                onerilenlerHeader
+                                mutfaklarHeader
+                                tariflerHeader
+                                .padding()
+                            }
+                        } else {
+                            searchedHeader.padding()
                         }
                     }
                     Spacer()
@@ -84,7 +87,7 @@ extension Home {
     
     private var search: some View {
         HStack {
-            TextField("Yemek veya tarif arayın...", text: $searched)
+            TextField("Yemek veya tarif arayın...", text: $vm.searched)
                 .padding(.leading)
                 .frame(maxHeight: 35)
                 .background(.background, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -157,6 +160,30 @@ extension Home {
                     .foregroundColor(Color("main"))
             }
             ForEach(vm.allPosts) { post in
+                NavigationLink {
+                    Detail(post: post).navigationBarHidden(true)
+                } label: {
+                    PostRowView(post: post)
+                }
+
+            }
+        }
+    }
+    
+    private var searchedHeader: some View {
+        VStack{
+            HStack{
+                Text("Sonuçlar").frame(maxWidth : .infinity, alignment: .leading)
+                    .font(.headline.bold())
+                Spacer()
+                Image(systemName: "arrow.up.arrow.down")
+                    .onTapGesture {
+                        vm.sort.toggle()
+                    }
+                    .font(.headline)
+                    .foregroundColor(Color("main"))
+            }
+            ForEach(vm.searchedList) { post in
                 NavigationLink {
                     Detail(post: post).navigationBarHidden(true)
                 } label: {

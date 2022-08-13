@@ -11,11 +11,12 @@ import Kingfisher
 struct Detail: View {
     var post: Post
     @StateObject var vm : DetailViewModel
+    @State var comment : String = ""
     @Environment (\.presentationMode) var presentationMode
     
     init(post: Post){
         self.post = post
-        _vm = StateObject(wrappedValue: DetailViewModel(userUid: post.authorUid))
+        _vm = StateObject(wrappedValue: DetailViewModel(post: post, userUid: post.authorUid))
     }
     
     
@@ -143,9 +144,41 @@ extension Detail{
             Text("Yorumlar")
                 .font(.headline)
                 .fontWeight(.semibold)
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .frame(maxWidth: .infinity)
-                .frame(height: 100)
+            VStack(spacing: 0){
+                    TextEditor(text: $comment)
+                Divider()
+                HStack(alignment: .center){
+                        Spacer()
+                        Button {
+                            vm.addComment(post: post, comment: comment)
+                        } label: {
+                            Text("Yorum Yap")
+                                .foregroundColor(Color("main"))
+                        }.padding()
+                        .disabled(comment == "")
+                    Spacer()
+                    }
+                
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 120)
+            .background(.background, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            
+            VStack{
+                ForEach(vm.comments) { comment in
+                    VStack(alignment: .leading){
+                        Text("Anonim").font(.headline)
+                        Text(comment.comment)
+                            .font(.caption2).foregroundColor(Color("secondary"))
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                        Divider()
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.background, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            
         }.padding(.vertical)
 
     }
