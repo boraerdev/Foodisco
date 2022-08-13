@@ -69,13 +69,6 @@ struct PostRowView: View {
     }
 }
 
-//struct PostRowView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PostRowView(post: Post(ad: "Adana Kebap", aciklama: "sdvlşmsdfmlsmlşdmalsdlşamslşmdlmsfmkdxvsdfljnsdnfnnkjnsdckjzxcjnkxvknxcvjnskdjnmkxc", malzeme: "", tarif: "", imageUrl: "https://firebasestorage.googleapis.com:443/v0/b/yemektarif-8545c.appspot.com/o/image%2F34FFA31C-1258-4B2C-9D51-8359397BD0BE?alt=media&token=0294e289-7c64-40f7-bec1-ce5180306398", mutfaklar: "", authorUid: "", timeStamp: Date()))
-//            .previewLayout(.device)
-//    }
-//}
-
 class rowViewModel: ObservableObject {
     
     @Published var user: User?
