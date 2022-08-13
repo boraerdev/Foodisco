@@ -7,14 +7,13 @@
 
 import SwiftUI
 
-struct FilteredListView: View {
-    var tab: Mutfaklar
-    @StateObject var vm : FilteredListViewModel
+struct TariflerListView: View {
+    @StateObject var vm : TariflerListViewModel
     @Environment (\.presentationMode) var presentationMode
     
-    init(tab: Mutfaklar){
-        self.tab = tab
-        _vm = StateObject(wrappedValue: FilteredListViewModel(tab: tab))
+    init(){
+        
+        _vm = StateObject(wrappedValue: TariflerListViewModel())
     }
     
     var body: some View {
@@ -34,7 +33,7 @@ struct FilteredListView: View {
                         Spacer()
                     }
                     .padding()
-                    Text(tab.rawValue).font(.headline.bold()).frame(maxWidth: .infinity, alignment: .leading).padding()
+                    Text("Tariflerim").font(.headline.bold()).frame(maxWidth: .infinity, alignment: .leading).padding()
                     ScrollView{
                         ForEach(vm.list) { post in
                             NavigationLink {
@@ -56,20 +55,21 @@ struct FilteredListView: View {
     }
 }
 
-class FilteredListViewModel: ObservableObject {
+class TariflerListViewModel: ObservableObject {
     
     @Published var list: [Post] = []
     
-    init(tab: Mutfaklar?){
+    init(){
         DispatchQueue.main.async {
-            self.filterByKitchen(kitchen: tab?.rawValue ?? "Kebap")
+            self.getFavList()
         }
     }
     
-    func filterByKitchen(kitchen: String){
-        PostServices.shared.filterByKitchen(kitchen: kitchen) { [weak self] posts in
-            self?.list = posts
+    func getFavList() {
+        PostServices.shared.tariflerList { posts in
+            self.list = posts
         }
     }
+    
     
 }

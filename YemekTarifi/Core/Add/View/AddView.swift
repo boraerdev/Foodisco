@@ -35,8 +35,8 @@ struct AddView: View {
                         }
                 }
                 Section("Yemek Bilgileri"){
-                    TextField("Açıklama", text: $aciklama)
                     TextField("Yemek Adı", text: $name)
+                    TextField("Açıklama", text: $aciklama)
                     ZStack(alignment: .leading){
                         if malzemeler == "" {
                             Text("Malzemeler").foregroundColor(.secondary.opacity(0.5))

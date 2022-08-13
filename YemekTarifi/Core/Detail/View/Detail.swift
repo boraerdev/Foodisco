@@ -68,12 +68,18 @@ extension Detail{
                         .frame(width: 31, height: 31)
                         .background(Color("main"), in: Circle())
                     Spacer()
-                    Image(systemName: "heart")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .frame(width: 31, height: 31)
-                        .background(Color("main"), in: Circle())
-
+                    VStack{
+                        Image(systemName: (vm.favlist.firstIndex(where: {$0.id == post.id}) != nil ? "heart.fill" : "heart" ) )
+                            .font(.title2)
+                            .foregroundColor(.white)
+                            .frame(width: 31, height: 31)
+                            .background(Color("main"), in: Circle())
+                            
+                    }
+                    .onTapGesture {
+                        vm.addFavList(post: post)
+                    }
+                    
                 }
                 .padding()
                 Spacer()
@@ -167,7 +173,7 @@ extension Detail{
                     .font(.headline)
                     .fontWeight(.semibold)
                 HStack{
-                    ForEach(post.mutfaklar.split(separator: ",") , id: \.self) { gelen in
+                    ForEach(post.mutfaklar, id: \.self) { gelen in
                         Text(gelen)
                             .foregroundColor(.white)
                             .frame(width: 85, height: 25)

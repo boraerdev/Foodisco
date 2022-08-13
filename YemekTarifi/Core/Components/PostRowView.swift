@@ -19,15 +19,16 @@ struct PostRowView: View {
     var body: some View {
         ZStack{
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(.white)
+                .fill(.background)
                 .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 4)
-            HStack(){
+            HStack(spacing: 15){
                 KFImage(URL(string: post.imageUrl)!)
                     .resizable()
                     .scaledToFill()
                     .frame(width: 78, height: 78)
                     .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                    .padding(.horizontal)
+                    .padding(.leading,20)
+                
                 VStack(alignment: .leading, spacing: 8){
                     Text(post.ad)
                         .font(.headline)
@@ -51,11 +52,13 @@ struct PostRowView: View {
                             Text("\(post.timeStamp.formatted(date: Date.FormatStyle.DateStyle.abbreviated, time: Date.FormatStyle.TimeStyle.omitted))")
                         }
                         .font(.caption2)
-                        .foregroundColor(.black)
+                        .foregroundColor(.primary)
 
                     }
 
                 }
+                .padding(.trailing)
+                
                 
             }
 

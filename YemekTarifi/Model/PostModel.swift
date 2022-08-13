@@ -15,7 +15,7 @@ struct Post:Codable, Identifiable {
     var malzeme: String
     var tarif: String
     var imageUrl: String
-    var mutfaklar: String
+    var mutfaklar: [String]
     var authorUid: String
     var timeStamp: Date
 }

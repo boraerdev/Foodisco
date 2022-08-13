@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
+import Firebase
 
-struct FilteredListView: View {
-    var tab: Mutfaklar
-    @StateObject var vm : FilteredListViewModel
+struct FavListView: View {
+    @StateObject var vm : FavListViewModel
     @Environment (\.presentationMode) var presentationMode
-    
-    init(tab: Mutfaklar){
-        self.tab = tab
-        _vm = StateObject(wrappedValue: FilteredListViewModel(tab: tab))
+    @StateObject var detailVm : DetailViewModel
+    init(){
+        
+        _vm = StateObject(wrappedValue: FavListViewModel())
+        _detailVm = StateObject(wrappedValue: DetailViewModel(userUid: Auth.auth().currentUser?.uid ?? ""))
     }
     
     var body: some View {
@@ -34,7 +35,7 @@ struct FilteredListView: View {
                         Spacer()
                     }
                     .padding()
-                    Text(tab.rawValue).font(.headline.bold()).frame(maxWidth: .infinity, alignment: .leading).padding()
+                    Text("Favoriler").font(.headline.bold()).frame(maxWidth: .infinity, alignment: .leading).padding()
                     ScrollView{
                         ForEach(vm.list) { post in
                             NavigationLink {
@@ -56,20 +57,21 @@ struct FilteredListView: View {
     }
 }
 
-class FilteredListViewModel: ObservableObject {
+class FavListViewModel: ObservableObject {
     
     @Published var list: [Post] = []
     
-    init(tab: Mutfaklar?){
+    init(){
         DispatchQueue.main.async {
-            self.filterByKitchen(kitchen: tab?.rawValue ?? "Kebap")
+            self.getFavList()
         }
     }
     
-    func filterByKitchen(kitchen: String){
-        PostServices.shared.filterByKitchen(kitchen: kitchen) { [weak self] posts in
-            self?.list = posts
+    func getFavList() {
+        PostServices.shared.getFavList { posts in
+            self.list = posts
         }
     }
+    
     
 }

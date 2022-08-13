@@ -12,11 +12,13 @@ struct Home: View {
     @State var searched: String = ""
     @EnvironmentObject var vm: HomeViewModel
     @EnvironmentObject var authVm : AuthViewModel
+    @Environment (\.colorScheme) var colorScheme
     @State var showAdd: Bool = false
     var body: some View {
         NavigationView{
             ZStack{
                 Color("bg").ignoresSafeArea()
+                
                 VStack(spacing: 0){
                     header
                     search
@@ -70,7 +72,12 @@ extension Home {
                         showAdd.toggle()
                     }
                 
-                Image(systemName: "heart.fill")
+                NavigationLink {
+                    FavListView().navigationBarHidden(true)
+                } label: {
+                    Image(systemName: "heart.fill")
+                }
+
             }.foregroundColor(Color("main"))
         }.font(.title2).padding([.horizontal,.top])
     }
@@ -80,7 +87,7 @@ extension Home {
             TextField("Yemek veya tarif arayın...", text: $searched)
                 .padding(.leading)
                 .frame(maxHeight: 35)
-                .background(.white, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .background(.background, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 4)
             Spacer()
             Image(systemName: "magnifyingglass").font(.title2)
@@ -122,7 +129,7 @@ extension Home {
                             FilteredListView(tab: mutfak).navigationBarHidden(true)
                         } label: {
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(.white)
+                                .fill(.background)
                                 .frame(width: 78, height: 78)
                                 .overlay(Image(mutfak.getImage()))
                                 .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 4)
